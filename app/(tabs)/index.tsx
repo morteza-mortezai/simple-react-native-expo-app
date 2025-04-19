@@ -5,13 +5,15 @@ import { Text, View, StyleSheet } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import EmojiPicker from "@/components/EmojiPicker";
 import EmojiList from "@/components/EmojiList";
+import EmojiSticker from "@/components/EmojiSticker";
+import { ImageSource } from "expo-image";
 const imagePlaceHolder = require("@/assets/images/flower.jpg");
 
 export default function Index() {
   const [selectedImage, setSelectedImage] = useState<undefined | string>(
     undefined
   );
-  const [selectedEmoji, setSelectedEmoji] = useState<undefined | string>(
+  const [selectedEmoji, setSelectedEmoji] = useState<undefined | ImageSource>(
     undefined
   );
   const [isVisible, setIsVisible] = useState<boolean>(false);
@@ -31,7 +33,9 @@ export default function Index() {
       <Text style={styles.text}>Image Viewer</Text>
       <View style={styles.imageContainer}>
         <ImageViewer imageUrl={selectedImage || imagePlaceHolder} />
-        {selectedEmoji && <ImageViewer imageUrl={selectedEmoji} />}
+        {selectedEmoji && (
+          <EmojiSticker imageSize={40} stickerSource={selectedEmoji} />
+        )}
       </View>
 
       <EmojiPicker isVisible={isVisible} onClose={() => setIsVisible(false)}>
@@ -63,6 +67,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   imageContainer: {
+    position:'relative',
     flex: 1,
     justifyContent: "center",
     // alignItems: "center",
