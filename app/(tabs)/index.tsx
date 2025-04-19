@@ -1,15 +1,17 @@
 import ImageViewer from "@/components/ImageViewver";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import Button from "@/components/Button";
-import { Text, View, StyleSheet } from "react-native";
+import { Text, View, StyleSheet, Platform } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import EmojiPicker from "@/components/EmojiPicker";
 import EmojiList from "@/components/EmojiList";
 import EmojiSticker from "@/components/EmojiSticker";
 import { ImageSource } from "expo-image";
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import * as MediaLibrary from "expo-media-library";
 const imagePlaceHolder = require("@/assets/images/flower.jpg");
-
+import { captureRef } from "react-native-view-shot";
+import domtoimage from "dom-to-image";
 
 export default function Index() {
   const [selectedImage, setSelectedImage] = useState<undefined | string>(
@@ -19,7 +21,7 @@ export default function Index() {
     undefined
   );
   const [isVisible, setIsVisible] = useState<boolean>(false);
-
+  const viewRef = useRef<View>(null);
   async function pickImage() {
     const result = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: true,
@@ -30,10 +32,46 @@ export default function Index() {
       setSelectedImage(result.assets[0].uri);
     }
   }
+  const [status, requestPermission] = MediaLibrary.usePermissions();
+  useEffect(() => {
+    if (status === null) {
+      requestPermission();
+    }
+  }, [status]);
+  const onSaveImageAsync = async () => {
+    if (Platform.OS !== "web") {
+      try {
+        const localUri = await captureRef(viewRef, { quality: 1 });
+
+        await MediaLibrary.saveToLibraryAsync(localUri);
+        if (localUri) {
+          alert("image saved");
+        }
+      } catch (error) {}
+    } else {
+      try {
+        if (viewRef.current) {
+          const dataUrl = await domtoimage.toJpeg(viewRef.current, {
+            quality: 0.95,
+
+          });
+        
+          let link = document.createElement("a");
+          link.download = "sticker-smash.jpeg";
+          link.href = dataUrl;
+          link.click();
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  };
+  const Wrapper = Platform.OS === "web" ? "div" : View;
+
   return (
     <GestureHandlerRootView style={styles.container}>
       <Text style={styles.text}>Image Viewer</Text>
-      <View style={styles.imageContainer}>
+      <View ref={viewRef} style={styles.imageContainer} collapsable={false}>
         <ImageViewer imageUrl={selectedImage || imagePlaceHolder} />
         {selectedEmoji && (
           <EmojiSticker imageSize={40} stickerSource={selectedEmoji} />
@@ -51,6 +89,7 @@ export default function Index() {
         </>
       </EmojiPicker>
       <View style={styles.actionContainer}>
+        <Button label="screen shot" onPress={onSaveImageAsync} />
         <Button label="choose photo" onPress={pickImage} />
         <Button label="choose emoji" onPress={() => setIsVisible(true)} />
       </View>
@@ -69,7 +108,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   imageContainer: {
-    position:'relative',
+    position: "relative",
     flex: 1,
     justifyContent: "center",
     // alignItems: "center",
