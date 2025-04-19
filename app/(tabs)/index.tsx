@@ -7,7 +7,9 @@ import EmojiPicker from "@/components/EmojiPicker";
 import EmojiList from "@/components/EmojiList";
 import EmojiSticker from "@/components/EmojiSticker";
 import { ImageSource } from "expo-image";
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 const imagePlaceHolder = require("@/assets/images/flower.jpg");
+
 
 export default function Index() {
   const [selectedImage, setSelectedImage] = useState<undefined | string>(
@@ -29,7 +31,7 @@ export default function Index() {
     }
   }
   return (
-    <View style={styles.container}>
+    <GestureHandlerRootView style={styles.container}>
       <Text style={styles.text}>Image Viewer</Text>
       <View style={styles.imageContainer}>
         <ImageViewer imageUrl={selectedImage || imagePlaceHolder} />
@@ -52,7 +54,7 @@ export default function Index() {
         <Button label="choose photo" onPress={pickImage} />
         <Button label="choose emoji" onPress={() => setIsVisible(true)} />
       </View>
-    </View>
+    </GestureHandlerRootView>
   );
 }
 
