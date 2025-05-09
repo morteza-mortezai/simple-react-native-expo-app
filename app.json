@@ -1,23 +1,24 @@
 {
   "expo": {
-    "name": "second",
-    "slug": "second",
+    "name": "quran",
+    "slug": "quran",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
+    "scheme": "helloworld",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.mrtz.mrtzi.second"
+      "bundleIdentifier": "com.mrtzmrtzi.quran"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.mrtz.mrtzi.second"
+      "edgeToEdgeEnabled": true,
+      "package": "com.mrtzmrtzi.quran"
     },
     "web": {
       "bundler": "metro",
@@ -34,19 +35,25 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
-      ]
+      ],
+      "expo-localization"
     ],
     "experiments": {
       "typedRoutes": true
     },
     "extra": {
-      "router": {
-        "origin": false
-      },
       "eas": {
-        "projectId": "dd251edf-4336-4c8a-ad89-9bd236b16570"
-      }
+        "projectId": "1aadaa61-0fc4-4b78-a08d-34ec89382c3c"
+      },
+      "supportsRTL": true,
+      "forcesRTL": true
     },
-    "owner": "g"
+    "owner": "mrtz.mrtzi",
+    "updates": {
+      "url": "https://u.expo.dev/1aadaa61-0fc4-4b78-a08d-34ec89382c3c"
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    }
   }
 }
