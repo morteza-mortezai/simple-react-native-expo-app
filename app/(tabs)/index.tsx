@@ -1,6 +1,4 @@
-import { Image } from "expo-image";
 import {
-  Platform,
   StyleSheet,
   ActivityIndicator,
   FlatList,
@@ -33,17 +31,7 @@ export default function HomeScreen() {
   }
 
   return (
-    // <ParallaxScrollView
-    //   headerBackgroundColor={{ light: "#A1CEDC", dark: "#1D3D47" }}
-    //   headerImage={
-    //     <Image
-    //       source={require("@/assets/images/partial-react-logo.png")}
-    //       style={styles.reactLogo}
-    //     />
-    //   }
-    // >
-    //       </ParallaxScrollView>
-    <ThemedView style={{ flex: 1 }}>
+    <ThemedView >
       <ThemedView style={styles.titleContainer}>
         <ThemedText type="title">لیست سوره ها</ThemedText>
       </ThemedView>
@@ -74,8 +62,9 @@ const styles = StyleSheet.create({
     paddingRight: 20,
     fontWeight: 600,
     fontSize: 20,
-    marginBottom: 30,
-    marginTop: 30,
+    marginBottom: 1,
+    paddingTop: 30,
+    lineHeight:60
   },
   stepContainer: {
     marginBottom: 24,
@@ -83,5 +72,6 @@ const styles = StyleSheet.create({
     paddingRight: 10,
     fontWeight: 600,
     fontSize: 20,
+    lineHeight:40
   },
 });

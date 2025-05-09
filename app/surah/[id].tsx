@@ -5,6 +5,7 @@ import {
   ActivityIndicator,
   ScrollView,
   TouchableOpacity,
+  useColorScheme
 } from "react-native";
 import {  useState, useLayoutEffect } from "react";
 import { Surah } from "@/model/quran";
@@ -21,6 +22,9 @@ export default function SurahDetail() {
   const [lineHeight] = useState(fontSize*2.5);
   const [marginBottom] = useState(fontSize*.8);
   const [fontFamily, setFontFamily] = useState("رنگی");
+
+  const colorScheme = useColorScheme();
+const iconColor = colorScheme === "dark" ? "#fff" : "#000";
 
   useLayoutEffect(() => {
     (async () => {
@@ -39,7 +43,7 @@ export default function SurahDetail() {
                 onPress={() => setModalVisible(true)}
                 style={{ paddingHorizontal: 8 }}
               >
-                <Ionicons name="settings-outline" size={24} color="black" />
+                <Ionicons name="settings-outline" size={24} color={iconColor} />
               </TouchableOpacity>
             </ThemedView>
           ),
@@ -55,7 +59,7 @@ export default function SurahDetail() {
                   onPress={() => navigation.goBack()}
                   style={{ paddingRight: 5 }}
                 >
-                  <Ionicons name={"arrow-forward"} size={24} color="black" />
+                  <Ionicons name={"arrow-forward"} size={24} color={iconColor} />
                 </TouchableOpacity>
                 <ThemedView style={{ marginRight: 8 }}>
                   <ThemedText
