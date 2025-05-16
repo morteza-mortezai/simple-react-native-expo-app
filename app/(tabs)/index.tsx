@@ -4,7 +4,6 @@ import {
   FlatList,
   Pressable,
   View,
-  I18nManager,
 } from "react-native";
 import { useState, useEffect } from "react";
 import { Surah } from "@/model/quran";
@@ -76,7 +75,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   itemContainer: {
-    flexDirection: I18nManager.isRTL ? "row-reverse" : "row",
+    flexDirection: "row" ,
     alignItems: "center",
     paddingVertical: 16,
     paddingHorizontal: 20,
