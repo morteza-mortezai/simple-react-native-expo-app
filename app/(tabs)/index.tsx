@@ -2,20 +2,22 @@ import {
   StyleSheet,
   ActivityIndicator,
   FlatList,
+  Pressable,
+  View,
+  I18nManager,
 } from "react-native";
-import { Link } from "expo-router";
-import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
 import { useState, useEffect } from "react";
 import { Surah } from "@/model/quran";
 import { toArabicDigits } from "@/hooks/arabicNumber";
+import { ThemedText } from "@/components/ThemedText";
+import { ThemedView } from "@/components/ThemedView";
+import { router } from "expo-router";
 
 export default function HomeScreen() {
-  const [quran, setQuran] = useState<Surah[]>([]);
+  const [quran, setQuran] = useState<Surah[] | null>(null);
 
   useEffect(() => {
     (async () => {
-      // dynamic import returns the module, .default is the JSON content
       const mod = await import("../../assets/quran.json");
       setQuran(mod.default.map((item) => ({ ...item, verses: undefined })));
     })();
@@ -23,33 +25,39 @@ export default function HomeScreen() {
 
   if (!quran) {
     return (
-      <ActivityIndicator
-        size="large"
-        style={{ flex: 1, justifyContent: "center" }}
-      />
+      <View style={styles.loaderContainer}>
+        <ActivityIndicator size="large" color="#4CAF50" />
+      </View>
     );
   }
 
   return (
-    <ThemedView >
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">لیست سوره ها</ThemedText>
-      </ThemedView>
-
+    <ThemedView style={styles.container}>
       <FlatList
         data={quran}
-        initialNumToRender={50} // Render more items initially
-        maxToRenderPerBatch={50} // Batch size
-        windowSize={10} // How many screens worth of content to render
+        initialNumToRender={50}
         keyExtractor={(item) => item.id.toString()}
+        ItemSeparatorComponent={() => <View style={styles.separator} />}
         renderItem={({ item: surah, index }) => (
-          <ThemedText style={styles.stepContainer}>
-            <Link href={`/surah/${surah.id}`}>
-              {toArabicDigits(index + 1)} - {surah.name}(
-              {toArabicDigits(surah.total_verses)}
-              آیه )
-            </Link>
-          </ThemedText>
+          <Pressable
+            style={({ pressed }) => [
+              styles.itemContainer,
+              pressed && { backgroundColor: "#f0f0f0" },
+            ]}
+            onPress={() => router.push(`/surah/${surah.id}`)}
+          >
+            <ThemedText style={styles.surahIndex}>
+              . {toArabicDigits(index + 1)}
+            </ThemedText>
+
+            <View style={styles.textRow}>
+              <ThemedText style={styles.surahName}>{surah.name}</ThemedText>
+              <ThemedText style={styles.surahDetails}>
+                {" "}
+                ({toArabicDigits(surah.total_verses)} آیه)
+              </ThemedText>
+            </View>
+          </Pressable>
         )}
       />
     </ThemedView>
@@ -57,21 +65,57 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    fontFamily: "ساده",
-    paddingRight: 20,
-    fontWeight: 600,
-    fontSize: 20,
-    marginBottom: 1,
-    paddingTop: 30,
-    lineHeight:60
+  container: {
+    flex: 1,
+    paddingVertical: 12,
+    backgroundColor: "#fff",
   },
-  stepContainer: {
-    marginBottom: 24,
-    fontFamily: "رنگی",
-    paddingRight: 10,
-    fontWeight: 600,
+  loaderContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  itemContainer: {
+    flexDirection: I18nManager.isRTL ? "row-reverse" : "row",
+    alignItems: "center",
+    paddingVertical: 16,
+    paddingHorizontal: 20,
+  },
+  surahIndex: {
+    fontSize: 18,
+    fontFamily: "امیری ساده",
+    width: 40,
+    textAlign: "center",
+    color: "#888",
+  },
+  textContainer: {
+    flexGrow: 1,
+    flex: 1,
+    justifyContent: "space-between",
+  },
+
+  separator: {
+    height: 1,
+    backgroundColor: "#eee",
+    marginHorizontal: 20,
+  },
+  textRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    alignItems: "baseline",
+  },
+
+  surahName: {
     fontSize: 20,
-    lineHeight:40
+    fontFamily: "امیری ساده",
+    fontWeight: "600",
+    color: "#222",
+  },
+
+  surahDetails: {
+    fontSize: 16,
+    fontFamily: "امیری ساده",
+    color: "#888", // lighter grey
+    fontWeight: "400",
   },
 });
