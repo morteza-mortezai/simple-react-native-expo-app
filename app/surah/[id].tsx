@@ -69,7 +69,8 @@ const iconColor = colorScheme === "dark" ? "#fff" : "#000";
                       fontFamily
                     }}
                   >
-                    {found.name} ({toArabicDigits(found.total_verses)})
+                    {found.name}
+                     ({toArabicDigits(found.total_verses)})
                   </ThemedText>
                 </ThemedView>
               </ThemedView>
@@ -114,7 +115,10 @@ const iconColor = colorScheme === "dark" ? "#fff" : "#000";
               key={idx}
               style={{ fontSize, fontFamily, lineHeight, marginBottom }}
             >
-              {verse.text}({toArabicDigits(idx + 1)})
+              {verse.text}
+              ﴿
+              {toArabicDigits(idx + 1)}
+              ﴾
             </ThemedText>
           ))}
         </ThemedView>
