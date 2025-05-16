@@ -21,7 +21,7 @@ export default function SurahDetail() {
   const [fontSize, setFontSize] = useState(28);
   const [lineHeight] = useState(fontSize*2.5);
   const [marginBottom] = useState(fontSize*.8);
-  const [fontFamily, setFontFamily] = useState("رنگی");
+  const [fontFamily, setFontFamily] = useState("امیری ساده");
 
   const colorScheme = useColorScheme();
 const iconColor = colorScheme === "dark" ? "#fff" : "#000";

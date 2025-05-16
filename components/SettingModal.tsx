@@ -1,9 +1,19 @@
-import { Modal, TouchableOpacity, Button } from 'react-native';
-import { ThemedView } from '@/components/ThemedView';
-import { ThemedText } from '@/components/ThemedText';
-import { useState } from 'react';
+import { Modal, TouchableOpacity, Button } from "react-native";
+import { ThemedView } from "@/components/ThemedView";
+import { ThemedText } from "@/components/ThemedText";
+import { useState } from "react";
 
-const fontFamilies = ['رنگی', 'ساده', 'القلم']; // Update with your actual loaded fonts
+const fontFamilies = [
+  "امیری ساده",
+  "امیری رنگی",
+  "روبیک",
+  "پلی پن",
+  "شهراز",
+  "لطیف",
+  "میرزا",
+  "کتیبه",
+  "القلم",
+]; // Update with your actual loaded fonts
 
 export function SettingsModal({
   visible,
@@ -34,8 +44,8 @@ export function SettingsModal({
       <ThemedView
         style={{
           flex: 1,
-          justifyContent: 'center',
-          backgroundColor: 'rgba(0,0,0,0.3)',
+          justifyContent: "center",
+          backgroundColor: "rgba(0,0,0,0.3)",
         }}
       >
         <ThemedView
@@ -44,11 +54,15 @@ export function SettingsModal({
             padding: 20,
             borderRadius: 12,
             elevation: 5,
-            backgroundColor: '#fff',
           }}
         >
           <ThemedText
-            style={{ fontWeight: 'bold', fontSize: 18, marginBottom: 16, textAlign: 'center' }}
+            style={{
+              fontWeight: "bold",
+              fontSize: 18,
+              marginBottom: 16,
+              textAlign: "center",
+            }}
           >
             تنظیمات متن
           </ThemedText>
@@ -56,9 +70,9 @@ export function SettingsModal({
           {/* Font Size Controls */}
           <ThemedView
             style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-evenly',
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-evenly",
               marginVertical: 16,
             }}
           >
@@ -72,12 +86,35 @@ export function SettingsModal({
           </ThemedView>
 
           {/* Font Family Switcher */}
-          <ThemedView style={{ marginBottom: 16 }}>
-            <Button title={`تغییر فونت (${fontFamily})`} onPress={cycleFont} />
-          </ThemedView>
+
+          <TouchableOpacity
+            onPress={cycleFont}
+            style={{
+              backgroundColor: "blue",
+              paddingVertical: 10,
+              borderRadius: 8,
+              marginBottom: 10,
+            }}
+          >
+            <ThemedText style={{ color: "white", textAlign: "center" }}>
+              تغییر فونت ({fontFamily})
+            </ThemedText>
+          </TouchableOpacity>
 
           {/* Close */}
-          <Button title="بستن" onPress={onClose} />
+
+          <TouchableOpacity
+            onPress={onClose}
+            style={{
+              backgroundColor: "red",
+              paddingVertical: 10,
+              borderRadius: 8,
+            }}
+          >
+            <ThemedText style={{ color: "white", textAlign: "center" }}>
+              خروج
+            </ThemedText>
+          </TouchableOpacity>
         </ThemedView>
       </ThemedView>
     </Modal>
