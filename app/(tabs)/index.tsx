@@ -41,9 +41,9 @@ export default function HomeScreen() {
 
   return (
     <ThemedView style={styles.container}>
+      <ThemedText style={{ paddingEnd: 20, marginBottom: 6 }}>جستجو</ThemedText>
       <TextInput
         style={styles.searchInput}
-        placeholder="جستجو..."
         value={search}
         onChangeText={setSearch}
       />
@@ -88,21 +88,21 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   searchInput: {
-    padding: 10,
+    padding: 5,
     marginHorizontal: 20,
     marginBottom: 10,
     borderWidth: 1,
     borderColor: "#ccc",
     borderRadius: 8,
-    fontFamily: "امیری ساده",
     fontSize: 18,
     textAlign: "right", // optional for RTL
     writingDirection: "rtl",
+    color: "white",
   },
   container: {
+    paddingTop: 50,
     flex: 1,
     paddingVertical: 12,
-    backgroundColor: "#fff",
   },
   loaderContainer: {
     flex: 1,
@@ -120,7 +120,6 @@ const styles = StyleSheet.create({
     fontFamily: "امیری ساده",
     width: 40,
     textAlign: "center",
-    color: "#888",
   },
   textContainer: {
     flexGrow: 1,
@@ -130,7 +129,7 @@ const styles = StyleSheet.create({
 
   separator: {
     height: 1,
-    backgroundColor: "#eee",
+    backgroundColor: "#888",
     marginHorizontal: 20,
   },
   textRow: {
@@ -143,7 +142,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontFamily: "امیری ساده",
     fontWeight: "600",
-    color: "#222",
   },
 
   surahDetails: {
