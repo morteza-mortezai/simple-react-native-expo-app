@@ -5,13 +5,14 @@ import {
   ActivityIndicator,
   ScrollView,
   TouchableOpacity,
-  useColorScheme
+  useColorScheme,
 } from "react-native";
-import {  useState, useLayoutEffect } from "react";
+import { useState, useLayoutEffect, useEffect } from "react";
 import { Surah } from "@/model/quran";
 import { toArabicDigits } from "@/hooks/arabicNumber";
 import { Ionicons } from "@expo/vector-icons"; // or any icon library
 import { SettingsModal } from "@/components/SettingModal";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function SurahDetail() {
   const { id } = useLocalSearchParams();
@@ -19,12 +20,33 @@ export default function SurahDetail() {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
   const [fontSize, setFontSize] = useState(28);
-  const [lineHeight] = useState(fontSize*2.5);
-  const [marginBottom] = useState(fontSize*.8);
+  const [lineHeight] = useState(fontSize * 2.5);
+  const [marginBottom] = useState(fontSize * 0.8);
   const [fontFamily, setFontFamily] = useState("امیری ساده");
 
   const colorScheme = useColorScheme();
-const iconColor = colorScheme === "dark" ? "#fff" : "#000";
+  const iconColor = colorScheme === "dark" ? "#fff" : "#000";
+
+  useEffect(() => {
+    const loadFontSettings = async () => {
+      try {
+        const storedFontSize = await AsyncStorage.getItem("fontSize");
+        const storedFontFamily = await AsyncStorage.getItem("fontFamily");
+
+        if (storedFontSize) {
+          setFontSize(Number(storedFontSize));
+        }
+
+        if (storedFontFamily) {
+          setFontFamily(storedFontFamily);
+        }
+      } catch (error) {
+        console.error("Failed to load font settings", error);
+      }
+    };
+
+    loadFontSettings();
+  }, []);
 
   useLayoutEffect(() => {
     (async () => {
@@ -59,18 +81,21 @@ const iconColor = colorScheme === "dark" ? "#fff" : "#000";
                   onPress={() => navigation.goBack()}
                   style={{ paddingRight: 5 }}
                 >
-                  <Ionicons name={"arrow-forward"} size={24} color={iconColor} />
+                  <Ionicons
+                    name={"arrow-forward"}
+                    size={24}
+                    color={iconColor}
+                  />
                 </TouchableOpacity>
                 <ThemedView style={{ marginRight: 8 }}>
                   <ThemedText
                     style={{
                       fontSize: 16,
                       paddingBottom: 6,
-                      fontFamily
+                      fontFamily,
                     }}
                   >
-                    {found.name}
-                     ({toArabicDigits(found.total_verses)})
+                    {found.name}({toArabicDigits(found.total_verses)})
                   </ThemedText>
                 </ThemedView>
               </ThemedView>
@@ -104,7 +129,7 @@ const iconColor = colorScheme === "dark" ? "#fff" : "#000";
               fontFamily,
               lineHeight,
               textAlign: "center",
-              marginBottom
+              marginBottom,
             }}
           >
             بِسْمِ ٱللّٰهِ ٱلرَّحْمٰنِ ٱلرَّحِيمِ
@@ -115,12 +140,14 @@ const iconColor = colorScheme === "dark" ? "#fff" : "#000";
               key={idx}
               style={{ fontSize, fontFamily, lineHeight, marginBottom }}
             >
-              {verse.text}
-              ﴿
-              {toArabicDigits(idx + 1)}
-              ﴾
+              {verse.text}﴿{toArabicDigits(idx + 1)}﴾
             </ThemedText>
           ))}
+          <ThemedText
+            style={{ fontSize: 12, textAlign: "center", color: "green" }}
+          >
+            با قرائت فاتحه ای سبب شادی روح اموات و درگذشتگانمان شویم.
+          </ThemedText>
         </ThemedView>
       </ScrollView>
 
