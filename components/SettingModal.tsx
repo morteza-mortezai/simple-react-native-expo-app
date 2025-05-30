@@ -1,7 +1,16 @@
-import { Modal, TouchableOpacity, Button } from "react-native";
+import { Modal, TouchableOpacity } from "react-native";
 import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
 import { useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+const saveValue = async (key: string, value: string) => {
+  try {
+    await AsyncStorage.setItem(key, value);
+  } catch (error) {
+    console.error("Error saving to storage:", error);
+  }
+};
 
 const fontFamilies = [
   "امیری ساده",
@@ -25,13 +34,24 @@ export function SettingsModal({
 }) {
   const [fontIndex, setFontIndex] = useState(0);
 
-  const increaseFont = () => setFontSize((s) => Math.min(s + 2, 40));
-  const decreaseFont = () => setFontSize((s) => Math.max(s - 2, 10));
+  const increaseFont = () =>
+    setFontSize((s) => {
+      const size = Math.min(s + 2, 40);
+      saveValue("fontSize", size + "");
+      return size;
+    });
+  const decreaseFont = () =>
+    setFontSize((s) => {
+      const size = Math.max(s - 2, 10);
+      saveValue("fontSize", size + "");
+      return size;
+    });
 
   const cycleFont = () => {
     const nextIndex = (fontIndex + 1) % fontFamilies.length;
     setFontIndex(nextIndex);
     setFontFamily(fontFamilies[nextIndex]);
+    saveValue("fontFamily", fontFamilies[nextIndex]);
   };
 
   return (

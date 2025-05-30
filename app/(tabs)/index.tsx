@@ -4,8 +4,10 @@ import {
   FlatList,
   Pressable,
   View,
+  TextInput,
+  ScrollView,
 } from "react-native";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useDeferredValue } from "react";
 import { Surah } from "@/model/quran";
 import { toArabicDigits } from "@/hooks/arabicNumber";
 import { ThemedText } from "@/components/ThemedText";
@@ -14,6 +16,8 @@ import { router } from "expo-router";
 
 export default function HomeScreen() {
   const [quran, setQuran] = useState<Surah[] | null>(null);
+  const [search, setSearch] = useState<string>("");
+  const deferredSearch = useDeferredValue(search);
 
   useEffect(() => {
     (async () => {
@@ -21,6 +25,11 @@ export default function HomeScreen() {
       setQuran(mod.default.map((item) => ({ ...item, verses: undefined })));
     })();
   }, []);
+
+  const filteredQuran = useMemo(
+    () => quran?.filter((s) => s.name.includes(deferredSearch)),
+    [quran, deferredSearch]
+  );
 
   if (!quran) {
     return (
@@ -32,38 +41,64 @@ export default function HomeScreen() {
 
   return (
     <ThemedView style={styles.container}>
-      <FlatList
-        data={quran}
-        initialNumToRender={50}
-        keyExtractor={(item) => item.id.toString()}
-        ItemSeparatorComponent={() => <View style={styles.separator} />}
-        renderItem={({ item: surah, index }) => (
-          <Pressable
-            style={({ pressed }) => [
-              styles.itemContainer,
-              pressed && { backgroundColor: "#f0f0f0" },
-            ]}
-            onPress={() => router.push(`/surah/${surah.id}`)}
-          >
-            <ThemedText style={styles.surahIndex}>
-              . {toArabicDigits(index + 1)}
-            </ThemedText>
-
-            <View style={styles.textRow}>
-              <ThemedText style={styles.surahName}>{surah.name}</ThemedText>
-              <ThemedText style={styles.surahDetails}>
-                {" "}
-                ({toArabicDigits(surah.total_verses)} آیه)
-              </ThemedText>
-            </View>
-          </Pressable>
-        )}
+      <TextInput
+        style={styles.searchInput}
+        placeholder="جستجو..."
+        value={search}
+        onChangeText={setSearch}
       />
+
+      {filteredQuran?.length === 0 && (
+        <ThemedText style={{ textAlign: "center", marginTop: 20 }}>
+          سوره‌ای یافت نشد.
+        </ThemedText>
+      )}
+      <ScrollView>
+        <FlatList
+          data={filteredQuran}
+          initialNumToRender={15}
+          keyExtractor={(item) => item.id.toString()}
+          ItemSeparatorComponent={() => <View style={styles.separator} />}
+          renderItem={({ item: surah, index }) => (
+            <Pressable
+              style={({ pressed }) => [
+                styles.itemContainer,
+                pressed && { backgroundColor: "#f0f0f0" },
+              ]}
+              onPress={() => router.push(`/surah/${surah.id}`)}
+            >
+              <ThemedText style={styles.surahIndex}>
+                . {toArabicDigits(index + 1)}
+              </ThemedText>
+
+              <View style={styles.textRow}>
+                <ThemedText style={styles.surahName}>{surah.name}</ThemedText>
+                <ThemedText style={styles.surahDetails}>
+                  {" "}
+                  ({toArabicDigits(surah.total_verses)} آیه)
+                </ThemedText>
+              </View>
+            </Pressable>
+          )}
+        />
+      </ScrollView>
     </ThemedView>
   );
 }
 
 const styles = StyleSheet.create({
+  searchInput: {
+    padding: 10,
+    marginHorizontal: 20,
+    marginBottom: 10,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 8,
+    fontFamily: "امیری ساده",
+    fontSize: 18,
+    textAlign: "right", // optional for RTL
+    writingDirection: "rtl",
+  },
   container: {
     flex: 1,
     paddingVertical: 12,
@@ -75,7 +110,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   itemContainer: {
-    flexDirection: "row" ,
+    flexDirection: "row",
     alignItems: "center",
     paddingVertical: 16,
     paddingHorizontal: 20,
