@@ -24,6 +24,17 @@ const fontFamilies = [
   "القلم",
 ]; // Update with your actual loaded fonts
 
+const translations = [
+  {
+    name: "مهدی الهی قمشه ای",
+    key: "fa1",
+  },
+  {
+    name: "فولادوند",
+    key: "fa2",
+  },
+];
+
 export function SettingsModal({
   visible,
   onClose,
@@ -31,6 +42,12 @@ export function SettingsModal({
   setFontSize,
   fontFamily,
   setFontFamily,
+  setTranslationKey,
+  translationKey,
+  showArabic,
+  setShowArabic,
+  showTranslation,
+  setShowTranslation,
 }) {
   const [fontIndex, setFontIndex] = useState(0);
 
@@ -40,6 +57,7 @@ export function SettingsModal({
       saveValue("fontSize", size + "");
       return size;
     });
+
   const decreaseFont = () =>
     setFontSize((s) => {
       const size = Math.max(s - 2, 10);
@@ -119,6 +137,67 @@ export function SettingsModal({
             <ThemedText style={{ color: "white", textAlign: "center" }}>
               تغییر فونت ({fontFamily})
             </ThemedText>
+          </TouchableOpacity>
+
+          {translations.map((t) => (
+            <TouchableOpacity
+              key={t.key}
+              onPress={async () => {
+                setTranslationKey(t.key);
+                await AsyncStorage.setItem("translationKey", t.key);
+              }}
+              style={{
+                padding: 10,
+                backgroundColor: translationKey === t.key ? "#4CAF50" : "#ddd",
+                borderRadius: 6,
+                marginBottom: 6,
+              }}
+            >
+              <ThemedText
+                style={{
+                  color: translationKey === t.key ? "white" : "black",
+                }}
+              >
+                ترجمه &nbsp;
+                {t.name}
+              </ThemedText>
+            </TouchableOpacity>
+          ))}
+
+          <TouchableOpacity
+            onPress={async () => {
+              const value = !showArabic;
+              setShowArabic(value);
+              await AsyncStorage.setItem("showArabic", value.toString());
+            }}
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              marginVertical: 4,
+            }}
+          >
+            <ThemedText style={{ fontSize: 16 }}>
+              {showArabic ? "☑" : "☐"}
+            </ThemedText>
+            <ThemedText style={{ marginLeft: 8 }}>نمایش متن عربی</ThemedText>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={async () => {
+              const value = !showTranslation;
+              setShowTranslation(value);
+              await AsyncStorage.setItem("showTranslation", value.toString());
+            }}
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              marginVertical: 4,
+            }}
+          >
+            <ThemedText style={{ fontSize: 16 }}>
+              {showTranslation ? "☑" : "☐"}
+            </ThemedText>
+            <ThemedText style={{ marginLeft: 8 }}>نمایش ترجمه</ThemedText>
           </TouchableOpacity>
 
           {/* Close */}

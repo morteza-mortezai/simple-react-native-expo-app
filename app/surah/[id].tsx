@@ -23,6 +23,9 @@ export default function SurahDetail() {
   const [lineHeight] = useState(fontSize * 2.5);
   const [marginBottom] = useState(fontSize * 0.8);
   const [fontFamily, setFontFamily] = useState("امیری ساده");
+  const [translationKey, setTranslationKey] = useState("fa1");
+  const [showArabic, setShowArabic] = useState(false);
+  const [showTranslation, setShowTranslation] = useState(true);
 
   const colorScheme = useColorScheme();
   const iconColor = colorScheme === "dark" ? "#fff" : "#000";
@@ -32,6 +35,9 @@ export default function SurahDetail() {
       try {
         const storedFontSize = await AsyncStorage.getItem("fontSize");
         const storedFontFamily = await AsyncStorage.getItem("fontFamily");
+        const storedTranslationKey = await AsyncStorage.getItem(
+          "translationKey"
+        );
 
         if (storedFontSize) {
           setFontSize(Number(storedFontSize));
@@ -40,13 +46,16 @@ export default function SurahDetail() {
         if (storedFontFamily) {
           setFontFamily(storedFontFamily);
         }
+        if (storedTranslationKey) {
+          setTranslationKey(storedTranslationKey);
+        }
       } catch (error) {
         console.error("Failed to load font settings", error);
       }
     };
 
     loadFontSettings();
-  }, []);
+  }, [translationKey]);
 
   useLayoutEffect(() => {
     (async () => {
@@ -96,6 +105,7 @@ export default function SurahDetail() {
                     }}
                   >
                     {found.name}({toArabicDigits(found.total_verses)})
+                    {translationKey}
                   </ThemedText>
                 </ThemedView>
               </ThemedView>
@@ -136,12 +146,24 @@ export default function SurahDetail() {
           </ThemedText>
           {/* Display verses if you have them */}
           {surah.verses?.map((verse, idx) => (
-            <ThemedText
-              key={idx}
-              style={{ fontSize, fontFamily, lineHeight, marginBottom }}
-            >
-              {verse.text}﴿{toArabicDigits(idx + 1)}﴾
-            </ThemedText>
+            <>
+              {showArabic && (
+                <ThemedText
+                  key={idx}
+                  style={{ fontSize, fontFamily, lineHeight, marginBottom }}
+                >
+                  {verse.text}﴿{toArabicDigits(idx + 1)}﴾
+                </ThemedText>
+              )}
+              {showTranslation && (
+                <ThemedText
+                  key={idx}
+                  style={{ lineHeight: 40, fontSize: fontSize * 0.7 }}
+                >
+                  {verse[translationKey]} ({toArabicDigits(idx + 1)})
+                </ThemedText>
+              )}
+            </>
           ))}
           <ThemedText
             style={{ fontSize: 12, textAlign: "center", color: "green" }}
@@ -158,6 +180,12 @@ export default function SurahDetail() {
         setFontSize={setFontSize}
         fontFamily={fontFamily}
         setFontFamily={setFontFamily}
+        setTranslationKey={setTranslationKey}
+        translationKey={translationKey}
+        showArabic={showArabic}
+        setShowArabic={setShowArabic}
+        showTranslation={showTranslation}
+        setShowTranslation={setShowTranslation}
       />
     </>
   );
