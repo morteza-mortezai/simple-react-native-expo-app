@@ -13,6 +13,7 @@ import { toArabicDigits } from "@/hooks/arabicNumber";
 import { Ionicons } from "@expo/vector-icons"; // or any icon library
 import { SettingsModal } from "@/components/SettingModal";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function SurahDetail() {
   const { id } = useLocalSearchParams();
@@ -105,7 +106,6 @@ export default function SurahDetail() {
                     }}
                   >
                     {found.name}({toArabicDigits(found.total_verses)})
-                    {translationKey}
                   </ThemedText>
                 </ThemedView>
               </ThemedView>
@@ -126,7 +126,7 @@ export default function SurahDetail() {
   }
 
   return (
-    <>
+    <SafeAreaView>
       <ScrollView>
         <ThemedView
           style={{
@@ -146,24 +146,30 @@ export default function SurahDetail() {
           </ThemedText>
           {/* Display verses if you have them */}
           {surah.verses?.map((verse, idx) => (
-            <>
+            <ThemedView key={idx + "m"} style={{ marginBottom }}>
               {showArabic && (
                 <ThemedText
-                  key={idx}
-                  style={{ fontSize, fontFamily, lineHeight, marginBottom }}
+                  style={{
+                    fontSize,
+                    fontFamily,
+                    lineHeight,
+                    marginBottom: marginBottom * 0.5,
+                  }}
                 >
                   {verse.text}﴿{toArabicDigits(idx + 1)}﴾
                 </ThemedText>
               )}
               {showTranslation && (
                 <ThemedText
-                  key={idx}
-                  style={{ lineHeight: 40, fontSize: fontSize * 0.7 }}
+                  style={{
+                    lineHeight: lineHeight * 0.7,
+                    fontSize: fontSize * 0.7,
+                  }}
                 >
                   {verse[translationKey]} ({toArabicDigits(idx + 1)})
                 </ThemedText>
               )}
-            </>
+            </ThemedView>
           ))}
           <ThemedText
             style={{ fontSize: 12, textAlign: "center", color: "green" }}
@@ -187,6 +193,6 @@ export default function SurahDetail() {
         showTranslation={showTranslation}
         setShowTranslation={setShowTranslation}
       />
-    </>
+    </SafeAreaView>
   );
 }
