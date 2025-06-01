@@ -5,7 +5,7 @@ import {
   Pressable,
   View,
   TextInput,
-  ScrollView,
+  useColorScheme,
 } from "react-native";
 import { useState, useEffect, useMemo, useDeferredValue } from "react";
 import { Surah } from "@/model/quran";
@@ -13,11 +13,13 @@ import { toArabicDigits } from "@/hooks/arabicNumber";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { router } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function HomeScreen() {
   const [quran, setQuran] = useState<Surah[] | null>(null);
   const [search, setSearch] = useState<string>("");
   const deferredSearch = useDeferredValue(search);
+  const colorScheme = useColorScheme();
 
   useEffect(() => {
     (async () => {
@@ -39,36 +41,41 @@ export default function HomeScreen() {
     );
   }
 
+  const inputStyle = {
+    ...styles.searchInput,
+    color: colorScheme === "dark" ? "#fff" : "#000",
+    backgroundColor: colorScheme === "dark" ? "#222" : "#fff",
+    borderColor: colorScheme === "dark" ? "#555" : "#ccc",
+  };
   return (
-    <ThemedView style={styles.container}>
-      <ThemedText style={{ paddingEnd: 20, marginBottom: 6 }}>جستجو</ThemedText>
-      <TextInput
-        style={styles.searchInput}
-        value={search}
-        onChangeText={setSearch}
-      />
+    <SafeAreaView style={{ flex: 1 }}>
+      <ThemedView style={styles.container}>
+        <TextInput
+          style={inputStyle}
+          value={search}
+          onChangeText={setSearch}
+          placeholder="نام سوره..."
+          placeholderTextColor={colorScheme === "dark" ? "#aaa" : "#666"}
+        />
 
-      {filteredQuran?.length === 0 && (
-        <ThemedText style={{ textAlign: "center", marginTop: 20 }}>
-          سوره‌ای یافت نشد.
-        </ThemedText>
-      )}
-      <ScrollView>
+        {filteredQuran?.length === 0 && (
+          <ThemedText style={{ textAlign: "center", marginTop: 20 }}>
+            سوره‌ای یافت نشد.
+          </ThemedText>
+        )}
+
         <FlatList
           data={filteredQuran}
           initialNumToRender={15}
           keyExtractor={(item) => item.id.toString()}
-          ItemSeparatorComponent={() => <View style={styles.separator} />}
           renderItem={({ item: surah, index }) => (
             <Pressable
-              style={({ pressed }) => [
-                styles.itemContainer,
-                pressed && { backgroundColor: "#f0f0f0" },
-              ]}
+              style={styles.itemContainer}
               onPress={() => router.push(`/surah/${surah.id}`)}
             >
               <ThemedText style={styles.surahIndex}>
-                . {toArabicDigits(index + 1)}
+                {" "}
+                {toArabicDigits(index + 1)}
               </ThemedText>
 
               <View style={styles.textRow}>
@@ -81,8 +88,8 @@ export default function HomeScreen() {
             </Pressable>
           )}
         />
-      </ScrollView>
-    </ThemedView>
+      </ThemedView>
+    </SafeAreaView>
   );
 }
 
@@ -92,15 +99,14 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     marginBottom: 10,
     borderWidth: 1,
-    borderColor: "#ccc",
+    paddingVertical: 10,
     borderRadius: 8,
     fontSize: 18,
     textAlign: "right", // optional for RTL
     writingDirection: "rtl",
-    color: "white",
   },
   container: {
-    paddingTop: 50,
+    paddingTop: 20,
     flex: 1,
     paddingVertical: 12,
   },
@@ -118,7 +124,7 @@ const styles = StyleSheet.create({
   surahIndex: {
     fontSize: 18,
     fontFamily: "امیری ساده",
-    width: 40,
+    // width: 45,
     textAlign: "center",
   },
   textContainer: {
@@ -127,11 +133,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
 
-  separator: {
-    height: 1,
-    backgroundColor: "#888",
-    marginHorizontal: 20,
-  },
   textRow: {
     flexDirection: "row",
     flexWrap: "wrap",
@@ -147,7 +148,7 @@ const styles = StyleSheet.create({
   surahDetails: {
     fontSize: 16,
     fontFamily: "امیری ساده",
-    color: "#888", // lighter grey
+    // color: "#888", // lighter grey
     fontWeight: "400",
   },
 });

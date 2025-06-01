@@ -1,9 +1,12 @@
 import { ThemedText } from "@/components/ThemedText";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function TabTwoScreen() {
   return (
-    <ThemedText style={{ padding: 15, textAlign: "center" }}>
-      برای شادی روح تمامی درگذشتگان و اموات، فاتحه‌ای قرائت کنیم.
-    </ThemedText>
+    <SafeAreaView>
+      <ThemedText style={{ padding: 45, textAlign: "center" }}>
+        برای شادی روح تمامی درگذشتگان و اموات، فاتحه‌ای قرائت کنیم.
+      </ThemedText>
+    </SafeAreaView>
   );
 }
