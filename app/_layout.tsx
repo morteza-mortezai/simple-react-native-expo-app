@@ -15,12 +15,9 @@ export default function RootLayout() {
     "امیری رنگی": require("../assets/fonts/AmiriQuran-Regular.ttf"),
     "امیری ساده": require("../assets/fonts/Amiri-Regular.ttf"),
     القلم: require("../assets/fonts/Al-Qalam-Quran-Majeed-Web-Regular.ttf"),
-    روبیک: require("../assets/fonts/Rubik-Regular.ttf"),
-    "پلی پن": require("../assets/fonts/PlaypenSansArabic-Regular.ttf"),
     شهراز: require("../assets/fonts/ScheherazadeNew-Regular.ttf"),
     لطیف: require("../assets/fonts/Lateef-Regular.ttf"),
     میرزا: require("../assets/fonts/Mirza-Regular.ttf"),
-    کنیبه: require("../assets/fonts/Katibeh-Regular.ttf"),
   });
 
   if (!loaded) {
