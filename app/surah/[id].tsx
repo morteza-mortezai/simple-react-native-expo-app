@@ -10,10 +10,10 @@ import {
 import { useState, useLayoutEffect, useEffect } from "react";
 import { Surah } from "@/model/quran";
 import { toArabicDigits } from "@/hooks/arabicNumber";
-import { Ionicons } from "@expo/vector-icons"; // or any icon library
 import { SettingsModal } from "@/components/SettingModal";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { IconSymbol } from "@/components/ui/IconSymbol";
 
 export default function SurahDetail() {
   const { id } = useLocalSearchParams();
@@ -25,11 +25,25 @@ export default function SurahDetail() {
   const [marginBottom] = useState(fontSize * 0.8);
   const [fontFamily, setFontFamily] = useState("امیری ساده");
   const [translationKey, setTranslationKey] = useState("fa1");
-  const [showArabic, setShowArabic] = useState(false);
+  const [showArabic, setShowArabic] = useState(true);
   const [showTranslation, setShowTranslation] = useState(true);
 
   const colorScheme = useColorScheme();
   const iconColor = colorScheme === "dark" ? "#fff" : "#000";
+  function onClosed({
+    fontSize,
+    fontFamily,
+    translationKey,
+    showArabic,
+    showTranslation,
+  }: any) {
+    setModalVisible(false);
+    setFontSize(fontSize);
+    setFontFamily(fontFamily);
+    setTranslationKey(translationKey);
+    setShowArabic(showArabic);
+    setShowTranslation(showTranslation);
+  }
 
   useEffect(() => {
     const loadFontSettings = async () => {
@@ -56,7 +70,7 @@ export default function SurahDetail() {
     };
 
     loadFontSettings();
-  }, [translationKey]);
+  }, []);
 
   useLayoutEffect(() => {
     (async () => {
@@ -75,7 +89,7 @@ export default function SurahDetail() {
                 onPress={() => setModalVisible(true)}
                 style={{ paddingHorizontal: 8 }}
               >
-                <Ionicons name="settings-outline" size={24} color={iconColor} />
+                <ThemedText>تنظیمات</ThemedText>
               </TouchableOpacity>
             </ThemedView>
           ),
@@ -91,9 +105,9 @@ export default function SurahDetail() {
                   onPress={() => navigation.goBack()}
                   style={{ paddingRight: 5 }}
                 >
-                  <Ionicons
-                    name={"arrow-forward"}
-                    size={24}
+                  <IconSymbol
+                    name={"chevron.right"}
+                    size={35}
                     color={iconColor}
                   />
                 </TouchableOpacity>
@@ -101,7 +115,6 @@ export default function SurahDetail() {
                   <ThemedText
                     style={{
                       fontSize: 16,
-                      paddingBottom: 6,
                       fontFamily,
                     }}
                   >
@@ -181,17 +194,12 @@ export default function SurahDetail() {
 
       <SettingsModal
         visible={modalVisible}
-        onClose={() => setModalVisible(false)}
+        closed={onClosed}
         fontSize={fontSize}
-        setFontSize={setFontSize}
         fontFamily={fontFamily}
-        setFontFamily={setFontFamily}
-        setTranslationKey={setTranslationKey}
         translationKey={translationKey}
         showArabic={showArabic}
-        setShowArabic={setShowArabic}
         showTranslation={showTranslation}
-        setShowTranslation={setShowTranslation}
       />
     </SafeAreaView>
   );
