@@ -24,7 +24,9 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.mrtzmrtzi.quran"
+      "package": "com.mrtzmrtzi.quran",
+      "icon": "./assets/images/icon.png",
+      "blockedPermissions": ["android.permission.SYSTEM_ALERT_WINDOW"]
     },
     "web": {
       "bundler": "metro",
@@ -42,8 +44,7 @@
           "backgroundColor": "#ffffff"
         }
       ],
-      "expo-localization",
-      "./plugins/withRemoveOverlayPermission"
+      "expo-localization"
     ],
     "experiments": {
       "typedRoutes": true
