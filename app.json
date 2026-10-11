@@ -10,7 +10,7 @@
     "version": "1.1.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "helloworld",
+    "scheme": "quran",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -19,14 +19,13 @@
     },
     "android": {
       "permissions": [],
+      "blockedPermissions": ["android.permission.SYSTEM_ALERT_WINDOW"],
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/icon.png",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.mrtzmrtzi.quran",
-      "icon": "./assets/images/icon.png",
-      "blockedPermissions": ["android.permission.SYSTEM_ALERT_WINDOW"]
+      "package": "com.mrtzmrtzi.quran"
     },
     "web": {
       "bundler": "metro",
