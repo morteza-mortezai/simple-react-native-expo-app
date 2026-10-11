@@ -42,7 +42,8 @@
           "backgroundColor": "#ffffff"
         }
       ],
-      "expo-localization"
+      "expo-localization",
+      "./plugins/withRemoveOverlayPermission"
     ],
     "experiments": {
       "typedRoutes": true
